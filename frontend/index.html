@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Frontend Placeholder</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          #1a4a5c 0%,
+          #2d6a7e 50%,
+          #4a8fa3 100%
+        );
+        background-image: url("assets/background.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+      }
+
+      .title {
+        font-family: "Inter", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 400;
+        line-height: 1.2;
+        color: #ffffff;
+        text-align: left;
+        margin-bottom: 0rem;
+      }
+
+      .outer-card {
+        margin-left: 75rem;
+        margin-top: -2rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+        background: transparent;
+        border-radius: 2rem;
+        padding: 1rem;
+      }
+
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .input-field {
+        width: 100%;
+        height: 50px;
+        background: rgba(1, 32, 42, 0.61);
+        border: none;
+        box-sizing: border-box;
+        border-radius: 12px;
+        padding: 0 1rem;
+        font-size: 1rem;
+        color: #ffffff;
+        font-family: "Inter", sans-serif;
+      }
+
+      .input-field::placeholder {
+        color: #ffffff;
+        opacity: 0.7;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border: 1px solid #51a9c3;
+      }
+
+      .dropdown {
+        width: 100%;
+        height: 50px;
+        padding: 0 1rem;
+        border-radius: 12px;
+        border: none;
+        background: rgba(1, 32, 42, 0.61);
+        color: white;
+        font-size: 1rem;
+        font-family: "Inter", sans-serif;
+        appearance: none;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1rem;
+        box-sizing: border-box;
+      }
+
+      .dropdown:focus {
+        outline: none;
+        border: 1px solid #51a9c3;
+      }
+
+      .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .password-wrapper .input-field {
+        padding-right: 2.5rem;
+      }
+
+      .toggle-password {
+        position: absolute;
+        right: 0.8rem;
+        cursor: pointer;
+        top: 50%;
+        transform: translateY(-50%);
+
+        font-size: 1.2rem;
+        color: #ffffff;
+        opacity: 0.7;
+      }
+
+      .toggle-password:hover {
+        opacity: 1;
+      }
+
+      .submit-btn {
+        width: 100%;
+        height: 60px;
+        background: rgba(81, 169, 195, 0.61);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s ease, background 0.2s ease;
+        font-family: "Inter", sans-serif;
+      }
+
+      .submit-btn:hover {
+        background: rgba(81, 169, 195, 0.8);
+      }
+
+      .submit-btn:active {
+        transform: scale(0.97);
+      }
+
+      #password-strength {
+        display: none;
+        height: 0.5rem;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 0.25rem;
+        margin-top: 0.5rem;
+        overflow: hidden;
+      }
+
+      #password-strength-bar {
+        height: 100%;
+        width: 0%;
+        background-color: red;
+        transition: width 0.3s ease, background-color 0.3s ease;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: #ffffff;
+        color: #000000;
+        padding: 2rem;
+        border-radius: 1rem;
+        max-width: 400px;
+        width: 80%;
+        text-align: center;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        font-family: "Inter", sans-serif;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      /* Close button */
+      .modal-content button {
+        margin-top: 1rem;
+        padding: 0.5rem 1.5rem;
+        background-color: #4a8fa3;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease;
+      }
+
+      .modal-content button:hover {
+        background-color: #2d6a7e;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="outer-card">
+      <div class="form-container">
+        <h1 class="title">Create an account</h1>
+
+        <input
+          type="text"
+          class="input-field"
+          id="firstname"
+          placeholder="First name"
+        />
+        <input
+          type="text"
+          class="input-field"
+          id="lastname"
+          placeholder="Last name"
+        />
+
+        <input
+          type="email"
+          class="input-field"
+          id="email"
+          placeholder="Email"
+        />
+        <div class="password-wrapper">
+          <input
+            type="password"
+            class="input-field"
+            id="password"
+            placeholder="Password"
+          />
+          <span class="toggle-password">&#128065;</span>
+        </div>
+        <div id="password-strength">
+          <div id="password-strength-bar"></div>
+        </div>
+
+        <select id="Gender" name="Gender" class="dropdown">
+          <option value="">Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+
+        <select id="role" name="role" class="dropdown">
+          <option value="">Select a role</option>
+          <option value="admin">Admin</option>
+          <option value="leader">Team leader</option>
+          <option value="developer">Developer</option>
+        </select>
+
+        <input type="number" class="input-field" id="team" placeholder="Team" />
+        <button class="submit-btn">Create account</button>
+      </div>
+      <div id="success-modal" class="modal">
+        <div class="modal-content">
+          <h2>Thank you for registering!</h2>
+          <p>Your information has been submitted successfully.</p>
+          <button id="close-modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      fetch("http://localhost:5000/api/health")
+        .then((response) => response.json())
+        .then((data) => console.log("Backend says:", data))
+        .catch((err) => console.error("Error:", err));
+
+      const nameRegex = /^[A-Za-z]+$/;
+      const emailRegex = /\S+@\S+\.\S+/;
+
+      const firstNameField = document.querySelector("#firstname");
+      const lastNameField = document.querySelector("#lastname");
+
+      firstNameField.addEventListener("input", () =>
+        validateNameField(firstNameField)
+      );
+      lastNameField.addEventListener("input", () =>
+        validateNameField(lastNameField)
+      );
+
+      function validateNameField(field) {
+        const value = field.value.trim();
+        if (value.length < 2) {
+          field.style.border = "1px solid red";
+        } else if (!nameRegex.test(value)) {
+          field.style.border = "1px solid red";
+        } else {
+          field.style.border = "1px solid limegreen";
+        }
+      }
+      const emailField = document.querySelector("#email");
+      emailField.addEventListener("input", () => {
+        const value = emailField.value.trim();
+        if (!emailRegex.test(value)) {
+          emailField.style.border = "1px solid red";
+        } else {
+          emailField.style.border = "1px solid limegreen";
+        }
+      });
+
+      const togglePassword = document.querySelector(
+        ".password-wrapper .toggle-password"
+      );
+
+      const passwordField = document.querySelector("#password");
+      togglePassword.addEventListener("click", () => {
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
+      });
+
+      const genderField = document.querySelector("#Gender");
+      const rolerField = document.querySelector("#role");
+
+      genderField.addEventListener("change", () => validateSelect(genderField));
+      rolerField.addEventListener("change", () => validateSelect(rolerField));
+
+      function validateSelect(selectElement) {
+        if (selectElement.value === "") {
+          selectElement.style.border = "1px solid red";
+        } else {
+          selectElement.style.border = "1px solid limegreen";
+        }
+      }
+
+      const strengthContainer = document.querySelector("#password-strength");
+      const strengthBar = document.querySelector("#password-strength-bar");
+
+      passwordField.addEventListener("input", () => {
+        const value = passwordField.value;
+
+        if (value.length === 0) {
+          strengthContainer.style.display = "none";
+          strengthBar.style.width = "0%";
+          return;
+        }
+
+        strengthContainer.style.display = "block";
+
+        let score = 0;
+        if (value.length >= 8) score++;
+        if (/[A-Z]/.test(value)) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+
+        const strength = (score / 4) * 100;
+        strengthBar.style.width = strength + "%";
+
+        if (score <= 1) {
+          strengthBar.style.backgroundColor = "red";
+        } else if (score === 2) {
+          strengthBar.style.backgroundColor = "orange";
+        } else if (score === 3) {
+          strengthBar.style.backgroundColor = "yellow";
+        } else {
+          strengthBar.style.backgroundColor = "limegreen";
+        }
+      });
+
+      const modal = document.querySelector("#success-modal");
+      const closeModalBtn = document.querySelector("#close-modal");
+      const submitBtn = document.querySelector(".submit-btn");
+      const teamField = document.querySelector("#team");
+
+      submitBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (isFormValid()) {
+          modal.style.display = "flex";
+        }
+      });
+
+      closeModalBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+        clearForm();
+      });
+
+      function isFormValid() {
+        const fieldsToCheck = [
+          firstNameField,
+          lastNameField,
+          emailField,
+          genderField,
+          rolerField,
+        ];
+        for (let field of fieldsToCheck) {
+          if (field.style.border !== "1px solid limegreen") {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function clearForm() {
+        firstNameField.value = "";
+        lastNameField.value = "";
+        emailField.value = "";
+        passwordField.value = "";
+        genderField.value = "";
+        rolerField.value = "";
+        teamField.value = " ";
+
+        const allFields = [
+          firstNameField,
+          lastNameField,
+          emailField,
+          passwordField,
+          genderField,
+          rolerField,
+          teamField,
+        ];
+        allFields.forEach((field) => (field.style.border = "none"));
+
+        document.querySelector("#password-strength").style.display = "none";
+        document.querySelector("#password-strength-bar").style.width = "0%";
+      }
+    </script>
+  </body>
+</html>
