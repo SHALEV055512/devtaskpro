@@ -5,8 +5,21 @@ services:
     build: ./frontend
     ports:
       - "8081:80"
+    depends_on:
+      - backend
+    networks:
+      - appnet
 
   backend:
     build: ./backend
     ports:
       - "5000:5000"
+    volumes:
+      - ./backend:/app
+      - ./backend/devtaskpro.db:/app/devtaskpro.db
+    networks:
+      - appnet
+
+networks:
+  appnet:
+
