@@ -3,8 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from crud import create_user
 from db import Base, engine
+from schemas import UserCreate
+from fastapi import HTTPException
+from crud import create_user, get_user_by_email
+import logging
 import models
-
 import json
 app = FastAPI()
 
@@ -18,15 +21,30 @@ app.add_middleware(
      allow_methods = ["*"],
      allow_headers =["*"]
 )
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+
 @app.get("/help")
 async def help():
     return {"status": "ok", "message": "Backend is alive!"}
 
-@app.post("/api/register")
-async def register(request: Request):
-    data = await request.json()
-    print("📩 Data received from frontend:")
-    print(json.dumps(data, ensure_ascii=False, indent=2))  
-    result = create_user(data)   # קריאה לפונקציית CRUD ששומרת את המשתמש ב-DB
-    return result
    
+@app.post("/api/register")
+async def register(user: UserCreate):
+    logger.info("📩 Registration request received")
+    logger.info(f"Payload (without password): {user.model_dump(exclude={'password'})}")
+
+    existing_user = get_user_by_email(user.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Email is already registered"
+        )
+
+    print(user.model_dump(exclude={'password'}))
+    create_user(user.model_dump())
+    return {"message": "User created"}  # צנוע, בלי סיסמה
