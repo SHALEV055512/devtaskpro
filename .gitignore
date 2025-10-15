@@ -1,0 +1,15 @@
+# Python venv
+venv/
+
+# Compiled files
+__pycache__/
+*.pyc
+
+# VSCode settings
+.vscode/
+
+# Logs
+*.log
+
+# Environment files
+.env
