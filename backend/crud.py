@@ -1,13 +1,15 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from db import SessionLocal
-from models import User
-from security import hash_password
+from backend.db import SessionLocal
+from backend import models
+from backend.security import hash_password
+
+
 
 def create_user(data: dict):
     db = SessionLocal()
     try: 
-        new_user = User(
+        new_user = models.User(
         email=data["email"],
         firstname=data["firstname"],
         lastname=data["lastname"],
@@ -23,4 +25,11 @@ def create_user(data: dict):
         raise           
     finally:
         db.close()       
-    
+
+def get_user_by_email(email: str):
+    from backend import models 
+    db: Session = SessionLocal()
+    try:
+        return db.query(models.User).filter(models.User.email == email).first()
+    finally:
+        db.close()

@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field,field_validator, StringConstraints
 
-NameType = Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=30)]
+NameType = Annotated[str, StringConstraints(strip_whitespace=True)]
 PasswordType = Annotated[str, StringConstraints(min_length=6, max_length=20)]
 TeamType = Annotated[int, Field(gt=0)]
 
@@ -39,6 +39,7 @@ class UserCreate(BaseModel):
     gender: GenderEnum
     role: RoleEnum
 
+
 # ============================================
 # 3) Field Validators
 # Custom validation rules for each field to ensure clean and valid input.
@@ -57,7 +58,7 @@ class UserCreate(BaseModel):
 
     @field_validator('firstname')
     @classmethod
-    def validate_names(cls, value):
+    def validate_firstname(cls, value):
         if len(value) < 2:
             raise ValueError('Firstname is too short (min 2 characters)')
         if len(value) > 30:
@@ -66,7 +67,7 @@ class UserCreate(BaseModel):
     
     @field_validator('lastname')
     @classmethod
-    def validate_names(cls, value):
+    def validate_lastname(cls, value):
         if len(value) < 2:
             raise ValueError('Lastname is too short (min 2 characters)')
         if len(value) > 30:

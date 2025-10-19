@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
-from crud import create_user
-from db import Base, engine
-from schemas import UserCreate
 from fastapi import HTTPException
-from crud import create_user, get_user_by_email
 import logging
-import models
+from backend.crud import create_user, get_user_by_email
+from backend.db import Base, engine
+from backend.schemas import UserCreate
+from backend import models
+
 import json
 app = FastAPI()
 
@@ -47,4 +47,4 @@ async def register(user: UserCreate):
 
     print(user.model_dump(exclude={'password'}))
     create_user(user.model_dump())
-    return {"message": "User created"}  # צנוע, בלי סיסמה
+    return {"message": "User created"}  
