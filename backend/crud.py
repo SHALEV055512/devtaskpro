@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from backend.db import SessionLocal
-from backend import models
-from backend.security import hash_password
+from db import SessionLocal
+import models
+from security import hash_password
 
 
 

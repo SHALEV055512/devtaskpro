@@ -3,10 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from fastapi import HTTPException
 import logging
-from backend.crud import create_user, get_user_by_email
-from backend.db import Base, engine
-from backend.schemas import UserCreate
-from backend import models
+from crud import create_user, get_user_by_email
+from db import Base, engine
+from schemas import UserCreate
+import models
 
 import json
 app = FastAPI()

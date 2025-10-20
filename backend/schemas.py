@@ -22,7 +22,7 @@ class GenderEnum(str, Enum):
 
 class RoleEnum(str, Enum):
     admin = "Admin"
-    teamleader = "Team Leader"
+    teamleader = "Team leader"
     developer = "Developer"
 
 # ============================================
