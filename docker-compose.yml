@@ -1,25 +1,30 @@
-version: '3.8'
-
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "8081:80"
-    depends_on:
-      - backend
-    networks:
-      - appnet
-
   backend:
     build: ./backend
     ports:
       - "5000:5000"
     volumes:
       - ./backend:/app
-      - ./backend/devtaskpro.db:/app/devtaskpro.db
+    networks:
+      - appnet
+
+  react:
+    build:
+      context: ./new_frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./new_frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - HOST=0.0.0.0     # ✅ מוסיף תמיכה בגישה חיצונית ל-Vite
+    depends_on:
+      - backend
     networks:
       - appnet
 
 networks:
   appnet:
-

@@ -118,7 +118,7 @@ def test_invalid_role_options(invalid_role):
     with pytest.raises(ValidationError) as exc:
         UserCreate(**data)
     assert "Admin" in str(exc.value)
-    assert "Team Leader" in str(exc.value)
+    assert "Team leader" in str(exc.value)
     assert "Developer" in str(exc.value)
 
 

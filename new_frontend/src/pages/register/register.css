@@ -1,0 +1,205 @@
+
+
+.register-left {
+  flex: 1;
+  color: white;
+  padding: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+/* טקסט ראשי */
+.main-heading {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  color: #fff;
+}
+
+/* טקסט משני */
+.sub-heading {
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 40rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* הלוגו */
+.logo-text {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  color: #fff;
+}
+
+
+.register-right {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* נתחיל קרוב לשמאל של האזור הזה */
+  align-items: center;
+  position: relative;
+}
+
+.form-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  color: #2563eb;
+  margin-bottom: 2rem;
+}
+
+/* טופס */
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem; /* רווח אחיד בין אלמנטים */
+  width: clamp(30rem, 38vw, 42rem);
+  min-height: clamp(48rem, 70vh, 75rem);
+  margin-left: clamp(16rem, 18rem, 20rem);
+
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 0.6rem 2.4rem rgba(0, 0, 0, 0.1);
+  padding: 3rem 2.5rem;
+  transition: all 0.3s ease;
+}
+
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: flex-end; /* טקסט משמאל, טופס מימין */
+  align-items: center; /* ממורכז אנכית */
+  padding: 4rem clamp(1rem, 2vw, 3rem) 4rem clamp(1rem, 4vw, 3rem);
+  box-sizing: border-box;
+
+  margin: 0;
+  background: radial-gradient(
+    circle at 10% 50%,          /* מרכז מעגל 65% למטה */
+    rgba(80, 130, 255, 0.9) 25%, /* כחול חזק יותר */
+    rgba(144, 206, 245, 0.9) 40%,
+    rgb(255, 255, 255) 50%
+  );  
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed; /* שיהיה טפט אמיתי */
+  overflow: hidden;
+}
+
+
+/* שם פרטי ומשפחה */
+.name-fields {
+  display: flex;
+  gap: 4.5rem; /* רווח ביניהם */
+}
+
+.name-fields input {
+  flex: 1;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid #ccc;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.name-fields input:focus {
+  border-color: #2563eb;
+}
+
+.full-width {
+  width: 93%;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid #ccc;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background-color: white;
+  appearance: none; /* מסיר את העיצוב ברירת מחדל של המערכת */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+select.full-width {
+  width: 100%;
+}
+
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; 
+}
+
+/* כפתור הרשמה */
+.submit-btn {
+  background:  #2563eb;              /* כחול עיקרי */
+  color: white;                     /* טקסט לבן */
+  font-size: 1.6rem;                /* טיפה גדול */
+  font-weight: 600;
+  padding: 1.2rem 0;                /* פי 2 מהשדות */
+  border: none;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0.4rem 1.2rem rgba(37, 99, 235, 0.3); /* בולט יותר */
+}
+
+/* אפקט ריחוף */
+.submit-btn:hover {
+  background: #1e4fd6;              /* כחול כהה מעט */
+  box-shadow: 0 0.6rem 1.6rem rgba(37, 99, 235, 0.4);
+  transform: scale(1.03);
+}
+
+/* אפקט לחיצה */
+.submit-btn:active {
+  transform: scale(0.97);           /* קטן קלות בעת לחיצה */
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center; /* ממרכז אנכית */
+}
+
+.password-wrapper .full-width {
+  flex: 1;
+  width: 93%; /* כמו שאר השדות */
+  padding: 1.2rem 2.8rem 1.2rem 1.4rem; /* מקום לעין מימין */
+  border: 1px solid #ccc;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.password-wrapper .full-width:focus {
+  border-color: #2563eb;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2563eb;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.eye-icon:hover {
+  opacity: 0.7;
+  transform: translateY(-50%) scale(1.15); /* אנימציה קטנה */
+}
+
+
+
+

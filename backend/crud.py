@@ -27,7 +27,7 @@ def create_user(data: dict):
         db.close()       
 
 def get_user_by_email(email: str):
-    from backend import models 
+    import models 
     db: Session = SessionLocal()
     try:
         return db.query(models.User).filter(models.User.email == email).first()
