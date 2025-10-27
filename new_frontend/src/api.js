@@ -15,7 +15,7 @@ export async function registerUser(user) {
   }
 
   if (!res.ok) {
-    throw new Error(data.detail || "Registration failed");
+    throw { response: { data } };
   }
 
   return data;

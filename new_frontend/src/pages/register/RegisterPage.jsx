@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import "./register.css";
 import { registerUser } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 function RegisterPage() {
+  // -------------------------------------------------------
+  // 1. STATE MANAGEMENT
+  // -------------------------------------------------------
   const [showPassword, setShowPassword] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -16,6 +24,9 @@ function RegisterPage() {
     role: "",
   });
 
+  // -------------------------------------------------------
+  // 2. INPUT HANDLERS
+  // -------------------------------------------------------
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,21 +34,55 @@ function RegisterPage() {
     });
   };
 
+  // -------------------------------------------------------
+  // 3. FORM SUBMISSION LOGIC
+  // -------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // --- Send registration request ---
       const data = await registerUser(formData);
       console.log("✅ User created successfully:", data);
-      alert("User created successfully!");
+
+      // --- If registration succeeded ---
+      setSuccessMessage(data.message); // message comes directly from backend
+      setErrors([]);
+      setShowOverlay(true);
     } catch (error) {
       console.error("❌ Registration failed:", error);
-      alert(error.message);
+
+      // --- Extract validation details from FastAPI response ---
+      const detail = error.response?.data?.detail;
+      if (Array.isArray(detail)) {
+        setErrors(detail.map((err) => err.msg));
+      } else if (typeof detail === "string") {
+        setErrors([detail]);
+      } else {
+        setErrors(["Registration failed. Please check your input."]);
+      }
+
+      setShowOverlay(true);
     }
   };
 
+  // -------------------------------------------------------
+  // 4. GLOBAL LISTENER (ESC TO CLOSE OVERLAY)
+  // -------------------------------------------------------
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === "Escape") setShowOverlay(false);
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
+  // -------------------------------------------------------
+  // 5. JSX RENDERING
+  // -------------------------------------------------------
   return (
     <div className="register-container">
+      {/* --- LEFT SIDE TEXT SECTION --- */}
       <div className="register-left">
         <h2 className="logo-text">Strategix</h2>
         <h1 className="main-heading">Where strategy turns into execution.</h1>
@@ -46,13 +91,14 @@ function RegisterPage() {
         </p>
       </div>
 
+      {/* --- RIGHT SIDE FORM SECTION --- */}
       <div className="register-right">
         <div className="form-wrapper">
           <h1 className="form-title">Create an account</h1>
 
-          {/* ✅ חיבור הפונקציה לטופס */}
           <form className="register-form" onSubmit={handleSubmit}>
             <div className="form-fields">
+              {/* --- First + Last name --- */}
               <div className="name-fields">
                 <input
                   type="text"
@@ -72,6 +118,7 @@ function RegisterPage() {
                 />
               </div>
 
+              {/* --- Email --- */}
               <input
                 type="email"
                 name="email"
@@ -82,6 +129,7 @@ function RegisterPage() {
                 required
               />
 
+              {/* --- Password --- */}
               <div className="password-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -107,6 +155,7 @@ function RegisterPage() {
                 )}
               </div>
 
+              {/* --- Team --- */}
               <input
                 type="number"
                 name="team"
@@ -117,6 +166,7 @@ function RegisterPage() {
                 required
               />
 
+              {/* --- Gender --- */}
               <select
                 id="gender"
                 name="gender"
@@ -132,6 +182,7 @@ function RegisterPage() {
                 <option value="Prefer not to say">Prefer not to say</option>
               </select>
 
+              {/* --- Role --- */}
               <select
                 id="role"
                 name="role"
@@ -146,6 +197,7 @@ function RegisterPage() {
                 <option value="Developer">Developer</option>
               </select>
 
+              {/* --- Submit Button --- */}
               <button type="submit" className="submit-btn">
                 <strong>Sign up</strong>
               </button>
@@ -153,6 +205,48 @@ function RegisterPage() {
           </form>
         </div>
       </div>
+
+      {/* -------------------------------------------------------
+         6. OVERLAY (ERRORS OR SUCCESS FEEDBACK)
+      ------------------------------------------------------- */}
+      {showOverlay && (
+        <div
+          className="error-overlay"
+          onClick={() => {
+            setShowOverlay(false);
+            if (successMessage) {
+              navigate("/login");
+            }
+          }}
+        >
+          <div
+            className={`error-modal ${successMessage ? "success" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {successMessage ? (
+              <>
+                <h2>Success</h2>
+                <ul>
+                  <li style={{ color: "#16a34a", fontWeight: "600" }}>
+                    {successMessage}
+                  </li>
+                </ul>
+                <p className="hint">Click anywhere to continue</p>
+              </>
+            ) : (
+              <>
+                <h2>Validation Errors</h2>
+                <ul>
+                  {errors.map((err, i) => (
+                    <li key={i}>{err}</li>
+                  ))}
+                </ul>
+                <p className="hint">Click anywhere to close</p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

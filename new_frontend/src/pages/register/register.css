@@ -200,6 +200,57 @@ select.full-width {
   transform: translateY(-50%) scale(1.15); /* אנימציה קטנה */
 }
 
+/* שכבת טשטוש */
+.error-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease;
+}
+
+/* תיבת הודעות */
+.error-modal {
+  background: #e0f2fe;            /* תכלת */
+  border: 1px solid #38bdf8;      /* תכלת כהה */
+  border-radius: 1rem;
+  padding: 2rem 2.5rem;
+  width: clamp(26rem, 42vw, 38rem);
+  box-shadow: 0 0.8rem 2rem rgba(0,0,0,0.15);
+  animation: slideUp 0.3s ease;
+  color: #075985;
+}
+
+.error-modal h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.6rem;
+  color: #0369a1;
+}
+
+.error-modal ul { margin: 0; padding-left: 1.4rem; }
+.error-modal li { margin: 0.3rem 0; }
+
+.error-modal .hint {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #0284c7;
+}
+
+.error-modal.success {
+  background-color: #d1fae5; /* ירוק בהיר */
+  border: 1px solid #16a34a; /* ירוק כהה */
+  color: #065f46; /* טקסט ירוק כהה */
+}
+
+
+/* אנימציות */
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: translateY(0) } }
 
 
 
