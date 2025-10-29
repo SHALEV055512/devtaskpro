@@ -6,6 +6,7 @@ import logging
 from crud import create_user, get_user_by_email
 from db import Base, engine
 from schemas import UserCreate
+from crud import authenticate_user 
 import models
 
 import json
@@ -48,3 +49,26 @@ async def register(user: UserCreate):
     print(user.model_dump(exclude={'password'}))
     create_user(user.model_dump())
     return {"message": "User created"}  
+
+@app.post("/auth/login")
+async def login(request: Request):
+    try:
+        data = await request.json()
+        email = data.get("email")
+        password = data.get("password")
+
+        if not email or not password:
+            raise HTTPException(status_code=400, detail="Email and password are required")
+        
+        result = authenticate_user(email, password)
+
+        if result == "user_not_found":
+            raise HTTPException(status_code=404, detail="User does not exist")
+        elif result == "wrong_password":
+            raise HTTPException(status_code=401, detail="Incorrect password")
+        
+        return {"role": result}
+
+    except Exception as e:
+        logger.error(f"❌ Login failed: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from db import SessionLocal
 import models
-from security import hash_password
+from security import hash_password,verify_password
 
 
 
@@ -31,5 +31,20 @@ def get_user_by_email(email: str):
     db: Session = SessionLocal()
     try:
         return db.query(models.User).filter(models.User.email == email).first()
+    finally:
+        db.close()
+
+
+def authenticate_user(email: str, plain_password: str):
+    db = SessionLocal()
+    try:
+        user = db.query(models.User).filter(models.User.email == email).first()
+        if not user:
+            return {"success": False, "msg": "User does not exist"}  
+
+        if not verify_password(plain_password, user.password):
+            return {"success": False, "msg": "Incorrect password"}   # סיסמה שגויה
+
+        return {"role": user.role}
     finally:
         db.close()

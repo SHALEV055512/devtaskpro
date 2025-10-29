@@ -141,4 +141,10 @@
   transform: translateY(-1px);
 }
 
+form {
+  margin: 0;
+  padding: 0;
+  display: contents; /* שומר על המבנה בדיוק כמו שהיה בלי form */
+}
+
 

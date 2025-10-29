@@ -193,7 +193,7 @@ function RegisterPage() {
               >
                 <option value="">Role</option>
                 <option value="Admin">Admin</option>
-                <option value="Team leader">Team leader</option>
+                <option value="Team_leader">Team_leader</option>
                 <option value="Developer">Developer</option>
               </select>
 
