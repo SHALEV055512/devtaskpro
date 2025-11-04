@@ -48,6 +48,9 @@ function RegisterPage() {
       // --- If registration succeeded ---
       setSuccessMessage(data.message); // message comes directly from backend
       setErrors([]);
+       localStorage.setItem("pendingEmail", formData.email);
+
+      navigate("/verify");
       setShowOverlay(true);
     } catch (error) {
       console.error("❌ Registration failed:", error);

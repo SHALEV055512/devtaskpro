@@ -8,7 +8,9 @@ from db import Base, engine
 from schemas import UserCreate
 from crud import authenticate_user 
 import models
-
+from mail.verify_email import send_verification_email
+from mail.email_verification_manager import verify_token
+from pydantic import BaseModel, EmailStr
 import json
 app = FastAPI()
 
@@ -47,8 +49,21 @@ async def register(user: UserCreate):
         )
 
     print(user.model_dump(exclude={'password'}))
-    create_user(user.model_dump())
-    return {"message": "User created"}  
+    send_verification_email(user.email, user.model_dump())
+    return {"message": "Verification email sent successfully. Please check your inbox."}
+class VerifyEmailRequest(BaseModel):
+    email: EmailStr
+    token: str
+
+@app.post("/api/verify_email")
+async def verify_email(data: VerifyEmailRequest):
+    """בודק אם הקוד נכון, ואם כן מוסיף את המשתמש ל־DB"""
+    ok, result = verify_token(data.email, data.token)
+    if not ok:
+        raise HTTPException(status_code=400, detail=result)
+
+    create_user(result)  # ✅ עכשיו המשתמש נרשם בפועל
+    return {"message": "Email verified and user created successfully!"}
 
 @app.post("/auth/login")
 async def login(request: Request):

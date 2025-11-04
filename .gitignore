@@ -8,6 +8,8 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+backend/mail/password_mail.env
+
 
 # =============================================================
 # NODE / REACT
