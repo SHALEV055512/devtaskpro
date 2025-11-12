@@ -1,18 +1,27 @@
-# ============================================
-# 1) Imports, Types & Enums
-# Base setup for data types, input constraints and dropdown-like fields.
-# ============================================
+# =============================================================
+# SCHEMAS.PY
+# =============================================================
+# Handles all data validation and input structure for the system.
+# =============================================================
 
 import re
 from enum import Enum
 from typing import Annotated
-from pydantic import BaseModel, EmailStr, Field,field_validator, StringConstraints
+from pydantic import BaseModel, EmailStr, Field, field_validator, StringConstraints
+
+
+# =============================================================
+# 1) TYPE ALIASES
+# =============================================================
 
 NameType = Annotated[str, StringConstraints(strip_whitespace=True)]
 PasswordType = Annotated[str, StringConstraints(min_length=6, max_length=20)]
 TeamType = Annotated[int, Field(gt=0)]
 
 
+# =============================================================
+# 2) ENUMS (Gender & Role)
+# =============================================================
 
 class GenderEnum(str, Enum):
     male = "Male"
@@ -20,15 +29,16 @@ class GenderEnum(str, Enum):
     other = "Other"
     prefer = "Prefer not to say"
 
+
 class RoleEnum(str, Enum):
     admin = "Admin"
     teamleader = "Team_leader"
     developer = "Developer"
 
-# ============================================
-# 2) User Model
-# Defines the structure of the incoming registration data.
-# ============================================
+
+# =============================================================
+# 3) USER CREATE MODEL
+# =============================================================
 
 class UserCreate(BaseModel):
     firstname: NameType
@@ -39,11 +49,9 @@ class UserCreate(BaseModel):
     gender: GenderEnum
     role: RoleEnum
 
-
-# ============================================
-# 3) Field Validators
-# Custom validation rules for each field to ensure clean and valid input.
-# ============================================
+    # ============================================
+    # FIELD VALIDATORS
+    # ============================================
 
     @field_validator('password')
     @classmethod
@@ -64,7 +72,7 @@ class UserCreate(BaseModel):
         if len(value) > 30:
             raise ValueError('Firstname is too long (max 30 characters)')
         return value
-    
+
     @field_validator('lastname')
     @classmethod
     def validate_lastname(cls, value):
@@ -73,27 +81,44 @@ class UserCreate(BaseModel):
         if len(value) > 30:
             raise ValueError('Lastname is too long (max 30 characters)')
         return value
-    
+
     @field_validator('gender')
     @classmethod
     def validate_gender(cls, value):
-         if value in ["Select Gender", "None", ""]:
-             raise ValueError("Please select a valid gender option before continuing.")
-         return value
+        if value in ["Select Gender", "None", ""]:
+            raise ValueError("Please select a valid gender option before continuing.")
+        return value
 
     @field_validator('role')
     @classmethod
     def validate_role(cls, value):
         if value in ["Select Role", "None", ""]:
-         raise ValueError("Please select a valid role option before continuing.")
+            raise ValueError("Please select a valid role option before continuing.")
         return value
-    
+
     @field_validator('team')
     @classmethod
     def validate_team(cls, value):
         if value <= 0:
-         raise ValueError("Please select a valid team number before continuing.")
+            raise ValueError("Please select a valid team number before continuing.")
         return value
 
 
+# =============================================================
+# 4) PASSWORD RESET MODEL
+# =============================================================
 
+class PasswordReset(BaseModel):
+    email: EmailStr
+    password: PasswordType
+
+    @field_validator('password')
+    @classmethod
+    def validate_password(cls, value):
+        if not re.search(r'[A-Z]', value):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not re.search(r'[a-z]', value):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not re.search(r'\d', value):
+            raise ValueError('Password must contain at least one number')
+        return value

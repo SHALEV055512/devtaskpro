@@ -96,7 +96,9 @@ else setError("Unknown role");
 
   {error && <p style={{ color: "red" }}>{error}</p>}
 
-  <div className="forgot-password">Forgot your password?</div>
+  <Link to="/forgot_password" className="forgot-password">
+  Forgot your password?
+  </Link>
 
   <button type="submit" className="login-button">Sign in</button>
 </form>

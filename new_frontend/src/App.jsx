@@ -5,6 +5,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import DeveloperDashboard from "./pages/developer/DeveloperDashboard";
 import TeamLeaderDashboard from "./pages/team_leader/TeamLeaderDashboard";
 import VerifyEmailPage from "./pages/email/VerifyEmailPage";
+import ForgotPassword from "./pages/email/ForgotPassword";
+import ResetPasswordPage from "./pages/email/ResetPasswordPage";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Route path="/developer" element={<DeveloperDashboard />} />
       <Route path="/team_leader" element={<TeamLeaderDashboard />} />
       <Route path="/verify" element={<VerifyEmailPage />} />
+      <Route path="/forgot_password" element={<ForgotPassword />} />
+      <Route path="/reset_password" element={<ResetPasswordPage />} />
 
     </Routes>
   );
