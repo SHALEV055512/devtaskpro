@@ -1,4 +1,4 @@
-🧩 DevTaskPro
+🌿 DevTaskPro
 
 A full-stack task and team management system designed for automated workflows, user role management, and real-time collaboration.
 Built with FastAPI, React, and Docker, this project demonstrates modern backend-frontend integration and cloud deployment on AWS EC2.
@@ -8,11 +8,10 @@ Built with FastAPI, React, and Docker, this project demonstrates modern backend-
 
 DevTaskPro is a multi-role platform (Admin / Team Leader / Developer) for managing projects and automation tasks.
 The system includes secure authentication flows, email verification, password reset, and CRUD-based task management.
-It’s containerized with Docker Compose for easy deployment, and uses FastAPI + SQLAlchemy for scalable backend logic.
+It’s containerized with Docker Compose for easy deployment and uses FastAPI + SQLAlchemy for scalable backend logic.
 
 ⚙️ Technologies Used
-
-Backend:
+🖥️ Backend
 
 FastAPI (Python) – REST API framework for high-performance backend
 
@@ -22,7 +21,7 @@ Pydantic – Data validation and serialization
 
 Uvicorn – ASGI server for production deployment
 
-Frontend:
+💻 Frontend
 
 React (Vite) – Dynamic UI for task dashboards and user management
 
@@ -30,27 +29,28 @@ Chakra UI – Modern component-based design system
 
 Axios – Handles API requests to the backend
 
-DevOps & Cloud:
+☁️ DevOps & Cloud
 
 Docker & Docker Compose – Multi-container orchestration
 
 AWS EC2 – Cloud deployment with persistent storage
 
+GitHub – Version control & CI/CD integration
 
 🚀 How to Run
 
-1. Clone the Repository
+1️⃣ Clone the Repository
 
 git clone https://github.com/SHALEV055512/devtaskpro
 cd devtaskpro
 
 
-2. Run with Docker Compose
+2️⃣ Run with Docker Compose
 
 docker compose up --build
 
 
-3. Or Run Locally (Dev mode)
+3️⃣ Run Locally (Dev Mode)
 Backend:
 
 cd backend
@@ -70,19 +70,19 @@ User Registration & Login (JWT authentication)
 
 Email Verification & Password Reset (SMTP)
 
-Role-Based Access Control (Admin, Team Leader, Developer)
+Role-Based Access Control (Admin / Team Leader / Developer)
 
 CRUD Operations for Tasks & Teams
 
 Dockerized Microservices Architecture
 
-Deployed on AWS EC2 (Persistent Volumes & Health Monitoring)
+Deployed on AWS EC2 with Persistent Volumes & Health Monitoring
 
 Ready for CI/CD integration (GitHub Actions / Jenkins)
 
 📸 Demo Snapshot
 
-Coming Soon — Live demo & screenshots of the dashboard interface.
+🖼️ Coming Soon — Live demo & dashboard screenshots will be added soon.
 
 🤝 Contributing
 
@@ -100,4 +100,4 @@ Built with ❤️ by Shalev Harari
 
 🔗 GitHub: github.com/SHALEV055512
 
-🔗 LinkedIn: linkedin.com/in/shalev-harari
+🔗 LinkedIn: linkedin.com/in/shalev-harariri
