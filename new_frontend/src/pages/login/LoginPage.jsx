@@ -80,13 +80,13 @@ else setError("Unknown role");
       required
     />
     {showPassword ? (
-      <EyeOff
+      <Eye
         size={25}
         className="eye-icon"
         onClick={() => setShowPassword(false)}
       />
     ) : (
-      <Eye
+      <EyeOff
         size={25}
         className="eye-icon"
         onClick={() => setShowPassword(true)}

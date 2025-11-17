@@ -5,4 +5,5 @@ pydantic
 bcrypt
 email-validator
 python-dotenv
+redis
 

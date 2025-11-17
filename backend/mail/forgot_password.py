@@ -1,17 +1,23 @@
 # =============================================================
-# PASSWORD RESET MANAGER
+# PASSWORD RESET MANAGER — REDIS VERSION
 # =============================================================
+
 import time
+import json
+import redis
 from crud import get_user_by_email, update_user_password
 from schemas import PasswordReset
 from mail.verify_email import send_auth_email
-from mail.email_verification_manager import verify_token
 
-# מאגר זמני לשמירת נתונים
-pending_reset_emails = {}
+# =============================================================
+# CONNECT TO REDIS
+# =============================================================
 
-# ✅ כאן נשמור את המייל שעבר אימות
-verified_email_cache = { "email": None }
+r = redis.StrictRedis(
+    host="redis",   # חשוב! localhost לבדיקה
+    port=6379,
+    decode_responses=True
+)
 
 
 # =============================================================
@@ -26,13 +32,18 @@ def request_password_reset(email: str):
         print(f"⚠️ Reset requested for NON-existing email: {email}")
         return {"success": True, "message": "If this email exists, a reset code was sent."}
 
+    # שליחת הטוקן למייל (כמו קודם)
     token = send_auth_email(email, None)
 
-    pending_reset_emails[email] = {
+    # יצירת Payload
+    payload = {
         "token": token,
         "requested_at": time.time(),
         "expires_in": 600
     }
+
+    # שמירה ב־Redis ל־10 דקות
+    r.setex(f"reset:{email}", 600, json.dumps(payload))
 
     print(f"✅ Sent reset token {token} to {email}")
     return {"success": True, "message": "Reset code sent. Check your email."}
@@ -46,25 +57,26 @@ def request_password_reset(email: str):
 def verify_reset_token(email: str, token: str):
     email = email.lower().strip()
 
-    entry = pending_reset_emails.get(email)
+    entry = r.get(f"reset:{email}")
     if not entry:
-        return {"success": False, "message": "No reset request found"}
+        return {"success": False, "message": "No reset request found or token expired"}
 
-    # בדיקת פג תוקף
-    if time.time() - entry["requested_at"] > entry["expires_in"]:
-        pending_reset_emails.pop(email, None)
+    data = json.loads(entry)
+
+    # בדיקת תוקף
+    if time.time() - data["requested_at"] > data["expires_in"]:
+        r.delete(f"reset:{email}")
         return {"success": False, "message": "Token expired"}
 
-    # ❗ בדיקת התאמת הטוקן (בלי verify_token של רישום!)
-    if str(entry["token"]) != str(token):
+    # בדיקת טוקן
+    if str(data["token"]) != str(token):
         return {"success": False, "message": "Invalid token"}
 
-    # ✅ כאן שומרים את המייל המאומת לשלב reset_password
-    verified_email_cache["email"] = email
+    # שמירת המייל המאומת (שימוש בשלב reset_password)
+    r.setex("reset_verified", 600, email)
 
     print(f"✅ Verified reset token for: {email}")
     return {"success": True, "message": "Token verified successfully"}
-
 
 
 
@@ -73,24 +85,25 @@ def verify_reset_token(email: str, token: str):
 # =============================================================
 
 def reset_password(new_password: str):
-    email = verified_email_cache.get("email")
+    email = r.get("reset_verified")
 
     if not email:
         return {"success": False, "message": "No verified email stored"}
 
+    # Validate password using schema
     try:
         PasswordReset(email=email, password=new_password)
     except Exception as e:
         return {"success": False, "message": f"Invalid password: {str(e)}"}
 
+    # Update DB
     updated = update_user_password(email, new_password)
     if not updated:
         return {"success": False, "message": "Database update failed"}
 
-    # ✅ ניקוי הזיכרון
-    verified_email_cache["email"] = None
-    pending_reset_emails.pop(email, None)
+    # Clear Redis keys
+    r.delete("reset_verified")
+    r.delete(f"reset:{email}")
 
     print(f"✅ Password updated for {email}")
     return {"success": True, "message": "Password updated successfully"}
-

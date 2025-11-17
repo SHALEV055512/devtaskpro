@@ -7,7 +7,11 @@ import {
   Input,
   VStack,
   useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
+
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -136,8 +140,8 @@ export default function ResetPasswordPage() {
             _focus={{ borderColor: "white", boxShadow: "0 0 0 2px white" }}
           />
 
-          {/* ✅ New Password with Eye */}
-          <Box position="relative" width="100%">
+                   {/* ✅ New Password with Eye (Chakra InputGroup) */}
+          <InputGroup>
             <Input
               placeholder="New password"
               type={showPassword1 ? "text" : "password"}
@@ -151,39 +155,26 @@ export default function ResetPasswordPage() {
               color="white"
               _placeholder={{ color: "whiteAlpha.800", fontSize: "lg" }}
               _focus={{ borderColor: "white", boxShadow: "0 0 0 2px white" }}
+              pr="60px" // שיהיה רווח לטקסט מהעין
             />
 
-            {showPassword1 ? (
-              <EyeOff
-                size={26}
-                style={{
-                  position: "absolute",
-                  right: "18px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "white",
-                }}
-                onClick={() => setShowPassword1(false)}
+            <InputRightElement height="100%" pr="18px">
+              <IconButton
+                aria-label={showPassword1 ? "Hide password" : "Show password"}
+                icon={showPassword1 ? <Eye size={24} /> : <EyeOff size={24} />}
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowPassword1((prev) => !prev)}
+                _hover={{ bg: "transparent" }}
+                _active={{ bg: "transparent" }}
+                color="white"
               />
-            ) : (
-              <Eye
-                size={26}
-                style={{
-                  position: "absolute",
-                  right: "18px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "white",
-                }}
-                onClick={() => setShowPassword1(true)}
-              />
-            )}
-          </Box>
+            </InputRightElement>
+          </InputGroup>
 
-          {/* ✅ Confirm Password with Eye */}
-          <Box position="relative" width="100%">
+
+                   {/* ✅ Confirm Password with Eye */}
+          <InputGroup>
             <Input
               placeholder="Confirm password"
               type={showPassword2 ? "text" : "password"}
@@ -197,36 +188,23 @@ export default function ResetPasswordPage() {
               color="white"
               _placeholder={{ color: "whiteAlpha.800", fontSize: "lg" }}
               _focus={{ borderColor: "white", boxShadow: "0 0 0 2px white" }}
+              pr="60px"
             />
 
-            {showPassword2 ? (
-              <EyeOff
-                size={26}
-                style={{
-                  position: "absolute",
-                  right: "18px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "white",
-                }}
-                onClick={() => setShowPassword2(false)}
+            <InputRightElement height="100%" pr="18px">
+              <IconButton
+                aria-label={showPassword2 ? "Hide password" : "Show password"}
+                icon={showPassword2 ? <Eye size={24} /> : <EyeOff size={24} />}
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowPassword2((prev) => !prev)}
+                _hover={{ bg: "transparent" }}
+                _active={{ bg: "transparent" }}
+                color="white"
               />
-            ) : (
-              <Eye
-                size={26}
-                style={{
-                  position: "absolute",
-                  right: "18px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                  color: "white",
-                }}
-                onClick={() => setShowPassword2(true)}
-              />
-            )}
-          </Box>
+            </InputRightElement>
+          </InputGroup>
+
 
           {/* ✅ Button */}
           <Button
