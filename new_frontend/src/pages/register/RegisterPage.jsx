@@ -5,9 +5,9 @@ import { registerUser } from "../../api";
 import { useNavigate } from "react-router-dom";
 
 function RegisterPage() {
-  // -------------------------------------------------------
+  // =========================================================
   // 1. STATE MANAGEMENT
-  // -------------------------------------------------------
+  // =========================================================
   const [showPassword, setShowPassword] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -24,9 +24,9 @@ function RegisterPage() {
     role: "",
   });
 
-  // -------------------------------------------------------
-  // 2. INPUT HANDLERS
-  // -------------------------------------------------------
+  // =========================================================
+  // 2. INPUT CHANGE HANDLER
+  // =========================================================
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -34,29 +34,31 @@ function RegisterPage() {
     });
   };
 
-  // -------------------------------------------------------
-  // 3. FORM SUBMISSION LOGIC
-  // -------------------------------------------------------
+  // =========================================================
+  // 3. FORM SUBMIT LOGIC
+  // =========================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // --- Send registration request ---
+      // Send data to backend
       const data = await registerUser(formData);
       console.log("✅ User created successfully:", data);
 
-      // --- If registration succeeded ---
-      setSuccessMessage(data.message); // message comes directly from backend
+      // Update UI
+      setSuccessMessage(data.message);
       setErrors([]);
-       localStorage.setItem("pendingEmail", formData.email);
+      localStorage.setItem("pendingEmail", formData.email);
 
-      navigate("/verify");
+      // Show success overlay
       setShowOverlay(true);
+      navigate("/verify");
     } catch (error) {
       console.error("❌ Registration failed:", error);
 
-      // --- Extract validation details from FastAPI response ---
+      // Extract backend validation errors
       const detail = error.response?.data?.detail;
+
       if (Array.isArray(detail)) {
         setErrors(detail.map((err) => err.msg));
       } else if (typeof detail === "string") {
@@ -69,23 +71,24 @@ function RegisterPage() {
     }
   };
 
-  // -------------------------------------------------------
-  // 4. GLOBAL LISTENER (ESC TO CLOSE OVERLAY)
-  // -------------------------------------------------------
+  // =========================================================
+  // 4. CLOSE OVERLAY WITH ESC KEY
+  // =========================================================
   useEffect(() => {
-    function handleKey(e) {
+    const handleKey = (e) => {
       if (e.key === "Escape") setShowOverlay(false);
-    }
+    };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // -------------------------------------------------------
-  // 5. JSX RENDERING
-  // -------------------------------------------------------
+  // =========================================================
+  // 5. JSX RENDER
+  // =========================================================
   return (
     <div className="register-container">
-      {/* --- LEFT SIDE TEXT SECTION --- */}
+
+      {/* ================= LEFT SIDE ================= */}
       <div className="register-left">
         <h2 className="logo-text">Strategix</h2>
         <h1 className="main-heading">Where strategy turns into execution.</h1>
@@ -94,14 +97,18 @@ function RegisterPage() {
         </p>
       </div>
 
-      {/* --- RIGHT SIDE FORM SECTION --- */}
+      {/* ================= RIGHT SIDE (FORM) ================= */}
       <div className="register-right">
         <div className="form-wrapper">
+
+          {/* Title */}
           <h1 className="form-title">Create an account</h1>
 
+          {/* Form */}
           <form className="register-form" onSubmit={handleSubmit}>
             <div className="form-fields">
-              {/* --- First + Last name --- */}
+
+              {/* First + Last Name */}
               <div className="name-fields">
                 <input
                   type="text"
@@ -121,7 +128,7 @@ function RegisterPage() {
                 />
               </div>
 
-              {/* --- Email --- */}
+              {/* Email */}
               <input
                 type="email"
                 name="email"
@@ -132,7 +139,7 @@ function RegisterPage() {
                 required
               />
 
-              {/* --- Password --- */}
+              {/* Password */}
               <div className="password-wrapper">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -158,7 +165,7 @@ function RegisterPage() {
                 )}
               </div>
 
-              {/* --- Team --- */}
+              {/* Team */}
               <input
                 type="number"
                 name="team"
@@ -169,7 +176,7 @@ function RegisterPage() {
                 required
               />
 
-              {/* --- Gender --- */}
+              {/* Gender */}
               <select
                 id="gender"
                 name="gender"
@@ -185,7 +192,7 @@ function RegisterPage() {
                 <option value="Prefer not to say">Prefer not to say</option>
               </select>
 
-              {/* --- Role --- */}
+              {/* Role */}
               <select
                 id="role"
                 name="role"
@@ -200,26 +207,31 @@ function RegisterPage() {
                 <option value="Developer">Developer</option>
               </select>
 
-              {/* --- Submit Button --- */}
+              {/* Submit */}
               <button type="submit" className="submit-btn">
                 <strong>Sign up</strong>
               </button>
+
+              {/* Back to Login */}
+              <div
+                className="back-to-login"
+                onClick={() => navigate("/login")}
+              >
+                Back to Login
+              </div>
+
             </div>
           </form>
         </div>
       </div>
 
-      {/* -------------------------------------------------------
-         6. OVERLAY (ERRORS OR SUCCESS FEEDBACK)
-      ------------------------------------------------------- */}
+      {/* ================= OVERLAY (ERROR/SUCCESS) ================= */}
       {showOverlay && (
         <div
           className="error-overlay"
           onClick={() => {
             setShowOverlay(false);
-            if (successMessage) {
-              navigate("/login");
-            }
+            if (successMessage) navigate("/login");
           }}
         >
           <div

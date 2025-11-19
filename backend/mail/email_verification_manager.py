@@ -10,11 +10,10 @@ import redis
 # =============================================================
 
 r = redis.StrictRedis(
-    host="redis",
+    host="redis",      # Redis service name from docker-compose
     port=6379,
     decode_responses=True
 )
-
 
 
 # =============================================================
@@ -23,8 +22,9 @@ r = redis.StrictRedis(
 
 def save_token(email, token, user_data, expires_in=600):
     """
-    Saves the verification token + user data into Redis
-    with expiration time (TTL)
+    Saves the verification token and user data into Redis.
+    Data is stored with a TTL (expires_in), meaning Redis   
+    will automatically delete it when time is up.
     """
 
     payload = {
@@ -32,7 +32,7 @@ def save_token(email, token, user_data, expires_in=600):
         "data": user_data
     }
 
-    # שמירה עם תוקף אוטומטי (Redis מוחק לבד אחרי 600 שניות)
+    # Store in Redis with automatic expiration
     r.setex(f"verify:{email}", expires_in, json.dumps(payload))
 
     print(f"[Redis] Token saved for {email}: {token}")
@@ -44,25 +44,27 @@ def save_token(email, token, user_data, expires_in=600):
 
 def verify_token(email, token):
     """
-    Verifies whether a token matches and is still valid.
-    Automatically deletes key after successful verification.
+    Verifies whether the token matches and is still valid.
+    Returns (success: bool, message or user_data).
+    Automatically deletes the Redis entry when verification succeeds.
     """
 
     entry = r.get(f"verify:{email}")
 
+    # No data means no pending verification / expired token
     if not entry:
         return False, "No pending verification or token expired"
 
     payload = json.loads(entry)
 
-    # Check token
+    # Token mismatch
     if payload["token"] != token:
         return False, "Invalid token"
 
-    # Extract user data
+    # Extract stored user data (will be passed to the registration flow)
     user_data = payload["data"]
 
-    # מחיקה אחרי אימות מוצלח
+    # Clean up after successful verification
     r.delete(f"verify:{email}")
 
     return True, user_data

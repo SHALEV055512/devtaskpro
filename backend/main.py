@@ -137,29 +137,38 @@ class ResetPasswordRequest(BaseModel):
 async def forgot_password(req: ForgotPasswordRequest):
     result = request_password_reset(req.email)
 
-    if not result.get("success"):
-        raise HTTPException(status_code=400, detail=result.get("message", "Reset request failed"))
+    # If failed → raise proper HTTPException with correct status
+    if not result["success"]:
+        raise HTTPException(
+            status_code=result["status"],
+            detail=result["message"]
+        )
 
+    # If success → respond normally
     return {"message": result["message"]}
-
 
 @app.post("/api/verify_reset_token")
 async def verify_reset(req: VerifyResetCode):
     result = verify_reset_token(req.email, req.token)
 
-    if not result.get("success"):
-        raise HTTPException(status_code=400, detail=result.get("message", "Invalid token"))
+    if not result["success"]:
+        raise HTTPException(
+            status_code=result["status"],
+            detail=result["message"]
+        )
 
     return {"message": result["message"]}
 
 
+
 @app.post("/api/reset_password")
 async def reset_pw(req: ResetPasswordRequest):
-    print("📩 Incoming reset password:", req.dict())
-
     result = reset_password(req.password)
 
-    if not result.get("success"):
-        raise HTTPException(status_code=400, detail=result["message"])
+    if not result["success"]:
+        raise HTTPException(
+            status_code=result["status"],
+            detail=result["message"]
+        )
 
     return {"message": result["message"]}
